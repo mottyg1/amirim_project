@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Dataframe Visualization Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Python Dataframe Visualization Generator</h1>
+
+        <label for="dataframe">Paste your Python dataframe:</label>
+        <textarea id="dataframe"></textarea>
+
+        <label for="visualization">Write the visualization you want:</label>
+        <textarea id="visualization"></textarea>
+
+        <h3>Generated Prompt:</h3>
+        <div id="output"></div>
+
+        <button id="copyButton">Copy Prompt</button>
+    </div>
+
+    <script>
+        function generatePrompt() {
+            const dataframe = document.getElementById("dataframe").value;
+            const visualization = document.getElementById("visualization").value;
+
+            const promptTemplate = `
+                write a python code that:
+				* the dataframe already exists in the variable df
+				* the libraries you use are already imported
+				* output only code, without any text
+				* the structure of the dataframe is ${dataframe}
+				* displayes a visulazation of ${visualization}                
+            `;
+
+            document.getElementById("output").innerText = promptTemplate;
+        }
+
+        function copyPrompt() {
+            const output = document.getElementById("output");
+
+            // Create a textarea element to hold the prompt
+            const textarea = document.createElement("textarea");
+            textarea.value = output.innerText;
+            document.body.appendChild(textarea);
+
+            // Copy the prompt from the textarea
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+        }
+
+        // Attach event listeners
+        document.getElementById("visualization").addEventListener("input", generatePrompt);
+        document.getElementById("copyButton").addEventListener("click", copyPrompt);
+    </script>
+</body>
+</html>
