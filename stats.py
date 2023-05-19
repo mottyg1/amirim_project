@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 from tqdm import trange, tqdm
 
 from RandomWalksTracker import RandomWalksTracker
@@ -23,7 +24,7 @@ def run_simulation(samples=5000, n=1000, connectivity=range(1, 21), graph_type="
 
             walk = random_walk(g)
 
-            stats = walk_stats(g, walk).update({'c': c})
+            stats = walk_stats(g, walk) | {'c': c}
             walk_data.append(stats)
             tracker.update(walk)
 
@@ -31,9 +32,12 @@ def run_simulation(samples=5000, n=1000, connectivity=range(1, 21), graph_type="
         distinct_sites_stats += tracker.stats_by_distinct_nodes()
 
     pd.DataFrame(walk_data).to_csv(
-        f'./data/{datetime.now().strftime("%Y-%m-/%d-%H")}_{graph_type}_walkData_n{n}_s{samples}.csv', index=True)
+        f'./data/{datetime.now().strftime("%Y-%m-%d-%H")}_{graph_type}_walkData_n{n}_s{samples}.csv', index=True)
     pd.DataFrame(time_stats).to_csv(
-        f'./data/{datetime.now().strftime("%Y-%m-/%d-%H")}_{graph_type}_timeStats_n{n}_s{samples}.csv', index=True)
+        f'./data/{datetime.now().strftime("%Y-%m-%d-%H")}_{graph_type}_timeStats_n{n}_s{samples}.csv', index=True)
     pd.DataFrame(distinct_sites_stats).to_csv(
-        f'./data/{datetime.now().strftime("%Y-%m-/%d-%H")}_{graph_type}_distinctSitesStats_n{n}_s{samples}.csv',
+        f'./data/{datetime.now().strftime("%Y-%m-%d-%H")}_{graph_type}_distinctSitesStats_n{n}_s{samples}.csv',
         index=True)
+
+
+run_simulation(samples=500, n=200, connectivity=np.linspace(0.95, 2, 50), graph_type="er")

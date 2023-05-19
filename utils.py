@@ -54,8 +54,9 @@ def in_giant_component(g, walk):
     return walk[0] in max(nx.connected_components(g), key=len)
 
 
-def random_walk(g):
-    start_node = random.choice(list(g.nodes()))
+def random_walk(g, start_node=None):
+    if start_node is None:
+        start_node = random.choice(list(g.nodes()))
 
     walk = [start_node]
 

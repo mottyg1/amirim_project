@@ -55,7 +55,8 @@ class RandomWalksTracker:
         mean_distinct_nodes = [avg(t) for t in transpose_lists(self.cum_distinct)]
         prob_new_node = [avg(t) for t in transpose_lists([list_diff(x) for x in self.cum_distinct])]
 
-        return [{'time': i + 1, 'mean_distinct_nodes': v[0], 'new_node_probability': v[1]}.update(self.base_dict) for i, v in
+        return [{'time': i + 1, 'mean_distinct_nodes': v[0], 'new_node_probability': v[1]} | self.base_dict for
+                i, v in
                 enumerate(zip(mean_distinct_nodes, prob_new_node))]
 
     def stats_by_distinct_nodes(self):
@@ -69,7 +70,7 @@ class RandomWalksTracker:
 
         for i in range(1, max_sites):
             probs.append({
-                "new_node_probability": c[(i, i + 1)] / (c[(i, i)] + c[(i, i + 1)]),
-                "distinct_visited": i
-            }.update(self.base_dict))
+                             "new_node_probability": c[(i, i + 1)] / (c[(i, i)] + c[(i, i + 1)]),
+                             "distinct_visited": i
+                         } | self.base_dict)
         return probs
