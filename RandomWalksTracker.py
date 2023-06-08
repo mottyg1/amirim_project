@@ -1,14 +1,16 @@
 from collections import Counter
+from itertools import zip_longest
 
 
 def cumulative_distinct(walk):
     distinct_counts = []
     distinct_set = set()
+    add_to_set = distinct_set.add
+    distinct_counts_append = distinct_counts.append
 
     for item in walk:
-        distinct_set.add(item)
-        distinct_counts.append(len(distinct_set))
-
+        add_to_set(item)
+        distinct_counts_append(len(distinct_set))
     return distinct_counts
 
 
@@ -17,18 +19,7 @@ def avg(ls):
 
 
 def transpose_lists(lists):
-    transpose = []
-    i = 0
-    while True:
-        col = []
-        for row in lists:
-            if i < len(row):
-                col.append(row[i])
-        if not col:
-            return transpose
-        else:
-            transpose.append(col)
-            i += 1
+    return [[dd for dd in d if dd is not None] for d in [list(x) for x in list(zip_longest(*lists))]]
 
 
 def get_neighboring_pairs(lst):

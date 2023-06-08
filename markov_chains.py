@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 from tqdm import tqdm
 
-from utils import random_walk
+from utils import random_walk_until_return
 
 
 def partition_number(n):
@@ -41,7 +41,7 @@ start_node = 0
 sim_counter = Counter()
 
 for _ in tqdm(range(10000)):
-    sim_counter.update([len(random_walk(g, start_node))])
+    sim_counter.update([len(random_walk_until_return(g, start_node))])
 
 adjacency_matrix = nx.to_numpy_matrix(g)
 m = adjacency_matrix / adjacency_matrix.sum(axis=1)
