@@ -5,7 +5,7 @@ from utils import random_walk_until_return, walk_stats
 from tqdm import tqdm
 
 
-def plot_graph_with_2core(g, fig_size=(20, 20)):
+def plot_graph_with_2core(g, fig_size=(20, 20), label_size=20):
     # Compute the 2-core of the graph
     core = g.shell_index(mode='OUT')
 
@@ -17,14 +17,23 @@ def plot_graph_with_2core(g, fig_size=(20, 20)):
     _, ax = plt.subplots(figsize=fig_size)
     # Plot the graph
     ig.plot(g, target=ax, vertex_color=colors, layout=layout, vertex_label=[str(v.index) for v in g.vs],
-            vertex_label_size=20)
+            vertex_label_size=label_size)
     plt.axis("off")
     plt.show()
 
 
 def get_transition_matrix(g):
     vertex_degree = np.array(g.outdegree())
-    return g.get_adjacency().data / vertex_degree[:, np.newaxis]
+    a = np.array(g.get_adjacency().data, dtype=float)
+    b = np.array(vertex_degree[:, np.newaxis], dtype=float)
+    return np.divide(a, b, out=np.zeros_like(a), where=b != 0)
+
+
+def get_punctured_transition_matrix(g, start_index):
+    initial_state = get_initial_state(len(g.vs), start_index)
+    T = get_transition_matrix(g)
+    T[start_index] = initial_state
+    return T
 
 
 def get_initial_state(length, start_index):
@@ -50,6 +59,6 @@ def get_probabilities(g, start_index, max_steps):
         step_probability = current_state[start_index] - sum(probabilities)
         probabilities.append(step_probability)
 
-    probabilities.append(1 - sum(probabilities))
+    # probabilities.append(1 - sum(probabilities))
 
     return probabilities

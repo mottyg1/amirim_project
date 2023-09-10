@@ -87,6 +87,39 @@ def select_random_node_from_giant_component(graph):
     return random_node
 
 
+def linearize_graph(g):
+    component_sizes = [len(c) for c in g.components(mode="WEAK")]
+    new_graph = ig.Graph(directed=False)
+
+    # Compute the total number of vertices needed
+    total_vertices = sum(component_sizes)
+
+    # Add the vertices to the new graph
+    new_graph.add_vertices(total_vertices)
+
+    # Initialize the starting vertex index
+    start_vertex = 0
+
+    # Create disjoint linear chains based on component sizes
+    for size in component_sizes:
+        # Compute the ending vertex index for the current chain
+        end_vertex = start_vertex + size - 1
+
+        # Add edges between vertices to form a linear chain
+        edges = [(i, i + 1) for i in range(start_vertex, end_vertex)]
+        new_graph.add_edges(edges)
+
+        # Update the start vertex for the next chain
+        start_vertex = end_vertex +1
+    return new_graph
+
+
+def component_size_of_random_node(graph):
+    node = random.randint(0, graph.vcount() - 1)
+    component_size = len(graph.components(mode=ig.WEAK)[node])
+    return component_size
+
+
 def full_histogram(data):
     count = len(data)
     k = Counter()

@@ -3,7 +3,7 @@ import numpy as np
 from tqdm import trange, tqdm
 
 from RandomWalksTracker import RandomWalksTracker
-from utils import random_walk_until_return, walk_stats
+from utils import random_walk_until_return, walk_stats, linearize_graph
 import pandas as pd
 from datetime import datetime
 
@@ -23,6 +23,7 @@ def run_simulation(samples=5000, n=1000, connectivity=range(1, 21), graph_type="
             else:  # rrg
                 g = ig.Graph.K_Regular(n, c)
 
+            g = linearize_graph(g)
             walk = random_walk_until_return(g, max_length=max_length, exclude_isolated_nodes=True)
 
             stats = walk_stats(g, walk, stats_to_calculate) | {'c': c}
@@ -42,7 +43,7 @@ def run_simulation(samples=5000, n=1000, connectivity=range(1, 21), graph_type="
     #     index=False)
 
 
-run_simulation(samples=200000, n=1000, connectivity=np.arange(0.1, 4, 0.1), graph_type="er",
+run_simulation(samples=200000, n=1000, connectivity=np.arange(0.1, 1.5, 0.1), graph_type="er",
                stats_to_calculate=['is_retroceding', 'walk_length', 'distinct_sites', 'start_node_degree',
                                    'component_size'],
-               file_name='walks_0-4_s200000.h5')
+               file_name='walks_linearized_0-1_s200000.h5')
